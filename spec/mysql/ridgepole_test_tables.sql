@@ -44,7 +44,9 @@ CREATE TABLE `employee_clubs` (
   `emp_no` int(10) unsigned NOT NULL,
   `club_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_emp_no_club_id` (`emp_no`,`club_id`) USING BTREE
+  KEY `idx_emp_no_club_id` (`emp_no`,`club_id`) USING BTREE,
+  CONSTRAINT `fk_employee_clubs_emp_no` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`),
+  CONSTRAINT `fk_employee_clubs_club_id` FOREIGN KEY (`club_id`) REFERENCES `clubs` (`id`)
 );
 
 DROP TABLE IF EXISTS `employees`;
