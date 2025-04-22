@@ -36,8 +36,9 @@ describe 'Ridgepole::Client#dump' do
         end
 
         create_table "employee_clubs", id: { type: :integer, unsigned: true }, force: :cascade do |t|
-          t.integer "emp_no", null: false, unsigned: true
+          t.integer "emp_no", null: false
           t.integer "club_id", null: false, unsigned: true
+          t.index ["club_id"], name: "fk_employee_clubs_club_id"
           t.index ["emp_no", "club_id"], name: "idx_emp_no_club_id"
         end
 
@@ -64,6 +65,8 @@ describe 'Ridgepole::Client#dump' do
           t.date    "to_date"
           t.index ["emp_no"], name: "emp_no"
         end
+        add_foreign_key "employee_clubs", "clubs", name: "fk_employee_clubs_club_id"
+        add_foreign_key "employee_clubs", "employees", column: "emp_no", primary_key: "emp_no", name: "fk_employee_clubs_emp_no"
       ERB
     }
   end
