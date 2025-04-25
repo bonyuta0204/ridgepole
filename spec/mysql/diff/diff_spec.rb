@@ -67,7 +67,14 @@ describe 'Ridgepole::Client.diff' do
           t.date    "to_date"
         end
 
+        create_table "enum_tests", id: :integer, force: :cascade do |t|
+          t.column "status", "enum('foo','bar','baz')", null: false
+        end
+
         add_index "titles", ["emp_no"], name: "emp_no", using: :btree
+
+        add_foreign_key "employee_clubs", "clubs", name: "fk_employee_clubs_club_id"
+        add_foreign_key "employee_clubs", "employees", column: "emp_no", primary_key: "emp_no", name: "fk_employee_clubs_emp_no"
       RUBY
     end
 
@@ -107,7 +114,7 @@ describe 'Ridgepole::Client.diff' do
 
         create_table "employee_clubs", force: :cascade do |t|
           t.integer "emp_no", unsigned: true, null: false
-          t.integer "club_id", unsigned: false, null: true
+          t.integer "club_id", null: false, unsigned: true
         end
 
         add_index "employee_clubs", ["emp_no", "club_id"], name: "idx_emp_no_club_id", using: :btree
@@ -136,7 +143,14 @@ describe 'Ridgepole::Client.diff' do
           t.date    "to_date"
         end
 
+        create_table "enum_tests", id: :integer, force: :cascade do |t|
+          t.column "status", "enum('foo','bar','baz')", null: false
+        end
+
         add_index "titles", ["emp_no"], name: "emp_no", using: :btree
+
+        add_foreign_key "employee_clubs", "employees", column: "emp_no", primary_key: "emp_no", name: "fk_employee_clubs_emp_no"
+        add_foreign_key "employee_clubs", "clubs", name: "fk_employee_clubs_club_id"
       RUBY
     end
 
@@ -144,10 +158,9 @@ describe 'Ridgepole::Client.diff' do
 
     it {
       delta = subject.diff(actual_dsl, expected_dsl)
+      puts delta.script
       expect(delta.differ?).to be_truthy
       expect(delta.script).to match_ruby erbh(<<-ERB)
-        change_column("employee_clubs", "club_id", :integer, **#{{ unsigned: false, null: true, default: nil, comment: nil }})
-
         change_column("employees", "last_name", :string, **#{{ limit: 20, default: 'XXX', unsigned: false, comment: nil }})
         change_column("employees", "gender", :string, **#{{ limit: 2, null: false, default: nil, unsigned: false, comment: nil }})
       ERB

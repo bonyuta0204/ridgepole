@@ -64,6 +64,10 @@ describe 'Ridgepole::Client#dump' do
           t.date    "to_date"
           t.index ["emp_no"], name: "emp_no"
         end
+
+        create_table "enum_tests", id: :integer, force: :cascade do |t|
+          t.column "status", "enum('foo','bar','baz')", null: false
+        end
       ERB
     }
   end

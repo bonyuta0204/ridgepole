@@ -77,3 +77,10 @@ CREATE TABLE `titles` (
   PRIMARY KEY (`emp_no`,`title`,`from_date`),
   KEY `emp_no` (`emp_no`)
 );
+
+DROP TABLE IF EXISTS `enum_tests`;
+CREATE TABLE `enum_tests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `status` enum('foo','bar','baz') NOT NULL,
+  PRIMARY KEY (`id`)
+);
